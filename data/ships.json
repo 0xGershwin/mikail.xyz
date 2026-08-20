@@ -110,5 +110,21 @@
     "title": "First live fill on a sports prediction market",
     "link": "https://github.com/MikailR",
     "blurb": "Tiny size, real venue. The point was the pipeline, not the PnL."
+  },
+  {
+    "date": "2021-12-14",
+    "type": "DEMO",
+    "venture": "labs",
+    "title": "Perlin noise grid",
+    "link": "demos/perlin/",
+    "blurb": "Animated Perlin-noise field on a canvas, with a draggable Tweakpane for the grid."
+  },
+  {
+    "date": "2021-12-14",
+    "type": "DEMO",
+    "venture": "labs",
+    "title": "Particle web demo",
+    "link": "demos/particles/",
+    "blurb": "Interactive canvas particle field that connects nearest points as you move."
   }
 ]
