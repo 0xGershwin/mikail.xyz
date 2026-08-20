@@ -8,7 +8,11 @@
   var VENTURES = ["agents", "rwa", "markets", "labs"];
   var DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
-  var siteState = { thesis: "" };
+  var AVATAR_PATH = "assets/avatar.jpg";
+  var AVATAR_SIZE = 512;
+
+  var siteState = { thesis: "", avatar: "", avatarUpdated: "" };
+  var pendingAvatar = null;
   var nowState = { updated: "", lines: [""] };
   var shipsState = [];
 
@@ -101,17 +105,30 @@
     }).then(readGithubJson);
   }
 
-  function putRemoteFile(path, content, message) {
-    return getRemoteFile(path).then(function (meta) {
+  // Missing file is not an error here: the first avatar upload creates it.
+  function getRemoteSha(path) {
+    return fetch(API + path + "?ref=" + encodeURIComponent(BRANCH), {
+      headers: apiHeaders(),
+    }).then(function (response) {
+      if (response.status === 404) return null;
+      return readGithubJson(response).then(function (meta) {
+        return meta.sha;
+      });
+    });
+  }
+
+  function putRemoteFile(path, base64, message) {
+    return getRemoteSha(path).then(function (sha) {
+      var payload = {
+        message: message,
+        content: base64,
+        branch: BRANCH,
+      };
+      if (sha) payload.sha = sha;
       return fetch(API + path, {
         method: "PUT",
         headers: apiHeaders(),
-        body: JSON.stringify({
-          message: message,
-          content: toBase64(content),
-          sha: meta.sha,
-          branch: BRANCH,
-        }),
+        body: JSON.stringify(payload),
       }).then(readGithubJson);
     });
   }
@@ -124,7 +141,12 @@
   }
 
   function applySite(data) {
-    siteState = { thesis: data && data.thesis ? String(data.thesis) : "" };
+    siteState = {
+      thesis: data && data.thesis ? String(data.thesis) : "",
+      avatar: data && data.avatar ? String(data.avatar) : "",
+      avatarUpdated: data && data.avatarUpdated ? String(data.avatarUpdated) : "",
+    };
+    pendingAvatar = null;
     paintSite();
   }
 
@@ -154,6 +176,83 @@
   function paintSite() {
     var field = $("[data-site-thesis]");
     if (field) field.value = siteState.thesis;
+
+    var preview = $("[data-avatar-preview]");
+    if (!preview) return;
+    if (pendingAvatar) {
+      preview.src = pendingAvatar.url;
+      preview.hidden = false;
+    } else if (siteState.avatar) {
+      preview.src =
+        "../" +
+        siteState.avatar +
+        (siteState.avatarUpdated ? "?v=" + encodeURIComponent(siteState.avatarUpdated) : "");
+      preview.hidden = false;
+    } else {
+      preview.removeAttribute("src");
+      preview.hidden = true;
+    }
+  }
+
+  function readImage(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () {
+        reject(new Error("could not read that file"));
+      };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () {
+          reject(new Error("that file is not an image"));
+        };
+        img.onload = function () {
+          resolve(img);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Center-crop to a square and re-encode, so the repo never takes a full-size photo.
+  function squareJpeg(img) {
+    var canvas = document.createElement("canvas");
+    canvas.width = AVATAR_SIZE;
+    canvas.height = AVATAR_SIZE;
+    var side = Math.min(img.width, img.height);
+    if (!side) throw new Error("image has no size");
+    canvas
+      .getContext("2d")
+      .drawImage(
+        img,
+        (img.width - side) / 2,
+        (img.height - side) / 2,
+        side,
+        side,
+        0,
+        0,
+        AVATAR_SIZE,
+        AVATAR_SIZE
+      );
+    return new Promise(function (resolve, reject) {
+      canvas.toBlob(
+        function (blob) {
+          if (blob) resolve(blob);
+          else reject(new Error("could not encode image"));
+        },
+        "image/jpeg",
+        0.85
+      );
+    });
+  }
+
+  function blobToBase64(blob) {
+    return blob.arrayBuffer().then(function (buffer) {
+      var bytes = new Uint8Array(buffer);
+      var bin = "";
+      for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+      return btoa(bin);
+    });
   }
 
   function paintNow() {
@@ -278,7 +377,12 @@
   function cleanSite() {
     var thesis = String(siteState.thesis || "").replace(/\s+/g, " ").trim();
     if (!thesis) throw new Error("one-liner cannot be empty");
-    return { thesis: thesis };
+    var next = { thesis: thesis };
+    if (siteState.avatar) {
+      next.avatar = siteState.avatar;
+      next.avatarUpdated = siteState.avatarUpdated || "";
+    }
+    return next;
   }
 
   function cleanNow() {
@@ -320,7 +424,7 @@
       return;
     }
     setStatus(statusNode, "", "saving…");
-    putRemoteFile(path, serialize(value), message)
+    return putRemoteFile(path, toBase64(serialize(value)), message)
       .then(function () {
         setStatus(statusNode, "ok", "saved");
       })
@@ -380,10 +484,79 @@
     siteState.thesis = event.target.value;
   });
 
+  $("[data-avatar-file]").addEventListener("change", function (event) {
+    var file = event.target.files && event.target.files[0];
+    if (!file) return;
+    if (pendingAvatar) URL.revokeObjectURL(pendingAvatar.url);
+    pendingAvatar = { file: file, url: URL.createObjectURL(file) };
+    paintSite();
+    setStatus($("[data-avatar-status]"), "", "ready to upload");
+  });
+
+  $("[data-avatar-upload]").addEventListener("click", function () {
+    var status = $("[data-avatar-status]");
+    if (!token()) {
+      setStatus(status, "err", "error: store a PAT first");
+      return;
+    }
+    if (!pendingAvatar) {
+      setStatus(status, "err", "error: choose a photo first");
+      return;
+    }
+    setStatus(status, "", "uploading…");
+    readImage(pendingAvatar.file)
+      .then(squareJpeg)
+      .then(blobToBase64)
+      .then(function (base64) {
+        return putRemoteFile(AVATAR_PATH, base64, "admin: update avatar");
+      })
+      .then(function () {
+        siteState.avatar = AVATAR_PATH;
+        siteState.avatarUpdated = new Date().toISOString();
+        var next = cleanSite();
+        return putRemoteFile(
+          "data/site.json",
+          toBase64(serialize(next)),
+          "admin: update site"
+        );
+      })
+      .then(function () {
+        if (pendingAvatar) URL.revokeObjectURL(pendingAvatar.url);
+        pendingAvatar = null;
+        paintSite();
+        setStatus(status, "ok", "photo published");
+      })
+      .catch(function (err) {
+        setStatus(status, "err", "error: " + (err.message || err));
+      });
+  });
+
+  $("[data-avatar-remove]").addEventListener("click", function () {
+    var status = $("[data-avatar-status]");
+    if (!token()) {
+      setStatus(status, "err", "error: store a PAT first");
+      return;
+    }
+    if (pendingAvatar) {
+      URL.revokeObjectURL(pendingAvatar.url);
+      pendingAvatar = null;
+    }
+    siteState.avatar = "";
+    siteState.avatarUpdated = "";
+    var file = $("[data-avatar-file]");
+    if (file) file.value = "";
+    paintSite();
+    try {
+      saveFile("data/site.json", cleanSite(), "admin: remove avatar", status);
+    } catch (err) {
+      setStatus(status, "err", "error: " + (err.message || err));
+    }
+  });
+
   $("[data-site-save]").addEventListener("click", function () {
     try {
       var next = cleanSite();
-      siteState = { thesis: next.thesis };
+      siteState.thesis = next.thesis;
       paintSite();
       saveFile("data/site.json", next, "admin: update site", $("[data-site-status]"));
     } catch (err) {

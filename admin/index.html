@@ -48,6 +48,26 @@
           <button type="button" class="chip chip-accent" data-site-save>save identity</button>
           <span class="admin-status mono" data-site-status></span>
         </div>
+
+        <p class="admin-note">
+          Photo left of the name. Center-cropped to a square and re-encoded at
+          512px JPEG before it is committed to <code>assets/avatar.jpg</code>.
+        </p>
+        <div class="admin-toolbar">
+          <img class="admin-avatar" data-avatar-preview alt="Current photo" hidden />
+          <input
+            class="admin-input admin-grow"
+            type="file"
+            accept="image/*"
+            data-avatar-file
+            aria-label="Choose a photo"
+          />
+        </div>
+        <div class="admin-toolbar">
+          <button type="button" class="chip chip-accent" data-avatar-upload>upload photo</button>
+          <button type="button" class="chip" data-avatar-remove>remove photo</button>
+          <span class="admin-status mono" data-avatar-status></span>
+        </div>
       </section>
 
       <section aria-labelledby="now-title">

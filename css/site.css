@@ -60,9 +60,41 @@ a:hover {
 }
 
 header.site {
-  margin-bottom: 1.75rem;
+  margin-bottom: 0;
   padding-bottom: 1.35rem;
   border-bottom: 1px solid var(--rule);
+}
+
+/* Photo sits left of the name; text column keeps the original rhythm. */
+.site-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.site-headings {
+  min-width: 0;
+}
+
+.avatar {
+  flex: none;
+  display: block;
+  width: 4.6rem;
+  height: 4.6rem;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  background: #fff;
+}
+
+.avatar[hidden] {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .avatar {
+    width: 3.6rem;
+    height: 3.6rem;
+  }
 }
 
 .crumb {
@@ -110,15 +142,19 @@ header.site {
   text-decoration: underline;
 }
 
+/* Equal space on both sides of every hairline rule. */
 section {
   margin: 0;
-  padding: 1.35rem 0 0;
+  padding: 1.35rem 0;
   border-top: 1px solid var(--rule);
 }
 
 .page > section:first-of-type {
   border-top: 0;
-  padding-top: 1.25rem;
+}
+
+.page > section:last-of-type {
+  padding-bottom: 0;
 }
 
 .section-head {
@@ -138,7 +174,9 @@ section {
   color: var(--muted);
 }
 
+/* Baseline-aligned in .section-head, so a default <p> margin would shove the whole row down. */
 .stamp {
+  margin: 0;
   color: var(--muted);
   white-space: nowrap;
 }
