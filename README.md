@@ -4,6 +4,14 @@ Static personal site. Hosted on GitHub Pages from the default branch root.
 
 Live: https://0xgershwin.github.io/mikail.xyz/
 
+## Edit identity
+
+The one-liner under the name on the home page is `data/site.json`:
+
+```json
+{ "thesis": "one line under the name" }
+```
+
 ## Edit now
 
 The home “Now” block is `data/now.json`:
@@ -38,7 +46,7 @@ Home shows the five newest entries. `/ships` shows the full reverse-chronologica
 
 ## Admin
 
-Unlisted console at `/admin/` (not linked from public nav). It edits `data/now.json` and `data/ships.json` and publishes by committing to `0xGershwin/mikail.xyz` on the default branch through the GitHub Contents API.
+Unlisted console at `/admin/` (not linked from public nav). It edits `data/site.json`, `data/now.json`, and `data/ships.json` and publishes by committing to `0xGershwin/mikail.xyz` on the default branch through the GitHub Contents API.
 
 Needs a **fine-grained PAT** with `contents:write` on `0xGershwin/mikail.xyz`. Paste it once in the admin UI. The token is stored only in that browser’s `localStorage` — never in this repo, never on a server.
 
