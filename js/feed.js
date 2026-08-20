@@ -179,7 +179,8 @@
     paint();
   }
 
-  fetch(src)
+  var url = src + (src.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
+  fetch(url, { cache: "no-store" })
     .then(function (response) {
       if (!response.ok) throw new Error("Could not load ships");
       return response.json();
