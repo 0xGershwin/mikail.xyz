@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ships — Mikail</title>
+    <meta name="description" content="Changelog of things Mikail has shipped." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+  </head>
+  <body>
+    <main class="page">
+      <p class="crumb mono"><a href="../">Mikail</a> / ships</p>
+
+      <section aria-labelledby="log-title">
+        <div class="section-head">
+          <h2 class="section-title" id="log-title">1. Log</h2>
+        </div>
+
+        <div class="filters" data-filters>
+          <div class="filter-row">
+            <span class="filter-label mono">venture</span>
+            <div data-filter-venture></div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label mono">type</span>
+            <div data-filter-type></div>
+          </div>
+        </div>
+
+        <ol class="feed" data-feed data-src="../data/ships.json" data-mode="feed"></ol>
+        <p class="empty" data-empty hidden>No entries for that filter.</p>
+      </section>
+    </main>
+    <script src="../js/feed.js"></script>
+  </body>
+</html>

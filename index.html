@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mikail</title>
+    <meta name="description" content="Mikail — a multiplexer into everything he ships." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
+    <link rel="stylesheet" href="css/site.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="site">
+        <h1 class="name">Mikail</h1>
+        <p class="thesis">I learn by building things I'm not qualified to build yet.</p>
+        <ul class="identity-links mono">
+          <li><a href="ships/">ships</a></li>
+          <li><a href="writing/">writing</a></li>
+          <li><a href="https://github.com/MikailR">github</a></li>
+          <li><a href="mailto:hello@mikail.xyz">email</a></li>
+        </ul>
+      </header>
+
+      <section aria-labelledby="now-title">
+        <div class="section-head">
+          <h2 class="section-title" id="now-title">1. Now</h2>
+          <p class="stamp mono">last updated: 2026-08-19</p>
+        </div>
+        <p class="prose">
+          Standing up agent infrastructure so a loop can draft, review, and land a change without babysitting the middle.
+          The constraint is cadence: something lands most days.
+        </p>
+        <p class="prose">
+          Markets and RWA stay in rotation; agents are the bottleneck I am actually trying to remove.
+        </p>
+      </section>
+
+      <section aria-labelledby="recent-title">
+        <div class="section-head">
+          <h2 class="section-title" id="recent-title">2. Recent</h2>
+        </div>
+        <ol class="recent" data-feed data-src="data/ships.json" data-mode="recent"></ol>
+      </section>
+    </main>
+    <script src="js/feed.js"></script>
+  </body>
+</html>
