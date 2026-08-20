@@ -22,18 +22,12 @@
         </ul>
       </header>
 
-      <section aria-labelledby="now-title">
+      <section aria-labelledby="now-title" data-now data-src="data/now.json">
         <div class="section-head">
           <h2 class="section-title" id="now-title">1. Now</h2>
-          <p class="stamp mono">last updated: 2026-08-19</p>
+          <p class="stamp mono" data-now-stamp></p>
         </div>
-        <p class="prose">
-          Standing up agent infrastructure so a loop can draft, review, and land a change without babysitting the middle.
-          The constraint is cadence: something lands most days.
-        </p>
-        <p class="prose">
-          Markets and RWA stay in rotation; agents are the bottleneck I am actually trying to remove.
-        </p>
+        <div data-now-lines></div>
       </section>
 
       <section aria-labelledby="recent-title">
@@ -43,6 +37,7 @@
         <ol class="recent" data-feed data-src="data/ships.json" data-mode="recent"></ol>
       </section>
     </main>
+    <script src="js/now.js"></script>
     <script src="js/feed.js"></script>
   </body>
 </html>

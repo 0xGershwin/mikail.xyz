@@ -1,0 +1,7 @@
+{
+  "updated": "2026-08-19",
+  "lines": [
+    "Standing up agent infrastructure so a loop can draft, review, and land a change without babysitting the middle. The constraint is cadence: something lands most days.",
+    "Markets and RWA stay in rotation; agents are the bottleneck I am actually trying to remove."
+  ]
+}

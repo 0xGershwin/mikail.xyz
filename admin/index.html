@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>admin — Mikail</title>
+    <meta name="description" content="Unlisted admin console for now.json and ships.json." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body>
+    <main class="page page-wide">
+      <p class="crumb mono"><a href="../">Mikail</a> / admin</p>
+
+      <section aria-labelledby="access-title">
+        <div class="section-head">
+          <h2 class="section-title" id="access-title">1. Access</h2>
+        </div>
+        <p class="admin-note">
+          Fine-grained GitHub PAT with <code>contents:write</code> on
+          <code>0xGershwin/mikail.xyz</code>. Stored in this browser’s
+          <code>localStorage</code> only — never written to the repo, never sent
+          anywhere except <code>api.github.com</code>. Publish commits to the
+          default branch via the Contents API. Unlisted; bookmark this URL.
+        </p>
+        <div class="admin-toolbar">
+          <label class="filter-label mono" for="pat">token</label>
+          <input id="pat" class="admin-input admin-grow" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" />
+          <button type="button" class="chip" data-store-token>store</button>
+          <button type="button" class="chip" data-clear-token>clear</button>
+          <span class="admin-status mono" data-token-status></span>
+        </div>
+      </section>
+
+      <section aria-labelledby="now-title">
+        <div class="section-head">
+          <h2 class="section-title" id="now-title">2. Now</h2>
+          <p class="stamp mono">data/now.json</p>
+        </div>
+        <div class="admin-field">
+          <label class="filter-label mono" for="now-updated">updated</label>
+          <input id="now-updated" class="admin-input" type="date" data-now-updated />
+        </div>
+        <div data-now-lines></div>
+        <div class="admin-toolbar">
+          <button type="button" class="chip" data-now-add>add paragraph</button>
+          <button type="button" class="chip chip-accent" data-now-save>save now</button>
+          <span class="admin-status mono" data-now-status></span>
+        </div>
+      </section>
+
+      <section aria-labelledby="ships-title">
+        <div class="section-head">
+          <h2 class="section-title" id="ships-title">3. Ships</h2>
+          <p class="stamp mono">data/ships.json</p>
+        </div>
+        <div class="admin-toolbar">
+          <button type="button" class="chip" data-ship-add>add row</button>
+          <button type="button" class="chip chip-accent" data-ship-save>save ships</button>
+          <span class="admin-status mono" data-ship-status></span>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <colgroup>
+              <col class="col-date" />
+              <col class="col-type" />
+              <col class="col-venture" />
+              <col class="col-title" />
+              <col class="col-link" />
+              <col class="col-blurb" />
+              <col class="col-del" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>date</th>
+                <th>type</th>
+                <th>venture</th>
+                <th>title</th>
+                <th>link</th>
+                <th>blurb</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody data-ship-rows></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="../js/admin.js"></script>
+  </body>
+</html>
