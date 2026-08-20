@@ -11,9 +11,9 @@
   </head>
   <body>
     <main class="page">
-      <header class="site">
+      <header class="site" data-site data-src="data/site.json">
         <h1 class="name">Mikail</h1>
-        <p class="thesis">I learn by building things I'm not qualified to build yet.</p>
+        <p class="thesis" data-site-thesis></p>
         <ul class="identity-links mono">
           <li><a href="ships/">ships</a></li>
           <li><a href="writing/">writing</a></li>
@@ -37,6 +37,7 @@
         <ol class="recent" data-feed data-src="data/ships.json" data-mode="recent"></ol>
       </section>
     </main>
+    <script src="js/site.js"></script>
     <script src="js/now.js"></script>
     <script src="js/feed.js"></script>
   </body>

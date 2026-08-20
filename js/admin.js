@@ -8,6 +8,7 @@
   var VENTURES = ["agents", "rwa", "markets", "labs"];
   var DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+  var siteState = { thesis: "" };
   var nowState = { updated: "", lines: [""] };
   var shipsState = [];
 
@@ -122,6 +123,11 @@
     });
   }
 
+  function applySite(data) {
+    siteState = { thesis: data && data.thesis ? String(data.thesis) : "" };
+    paintSite();
+  }
+
   function applyNow(data) {
     nowState = {
       updated: data && data.updated ? String(data.updated) : "",
@@ -143,6 +149,11 @@
       };
     });
     paintShips();
+  }
+
+  function paintSite() {
+    var field = $("[data-site-thesis]");
+    if (field) field.value = siteState.thesis;
   }
 
   function paintNow() {
@@ -264,6 +275,12 @@
     });
   }
 
+  function cleanSite() {
+    var thesis = String(siteState.thesis || "").replace(/\s+/g, " ").trim();
+    if (!thesis) throw new Error("one-liner cannot be empty");
+    return { thesis: thesis };
+  }
+
   function cleanNow() {
     var updated = ($("[data-now-updated]") || {}).value || nowState.updated;
     var lines = nowState.lines
@@ -314,6 +331,14 @@
 
   function hydrateFromGithub() {
     if (!token()) return;
+    getRemoteFile("data/site.json")
+      .then(function (file) {
+        applySite(JSON.parse(fromBase64(file.content)));
+        setStatus($("[data-site-status]"), "", "loaded from github");
+      })
+      .catch(function (err) {
+        setStatus($("[data-site-status]"), "err", "error: " + (err.message || err));
+      });
     getRemoteFile("data/now.json")
       .then(function (file) {
         applyNow(JSON.parse(fromBase64(file.content)));
@@ -349,6 +374,21 @@
     window.localStorage.removeItem(TOKEN_KEY);
     $("#pat").value = "";
     paintTokenStatus();
+  });
+
+  $("[data-site-thesis]").addEventListener("input", function (event) {
+    siteState.thesis = event.target.value;
+  });
+
+  $("[data-site-save]").addEventListener("click", function () {
+    try {
+      var next = cleanSite();
+      siteState = { thesis: next.thesis };
+      paintSite();
+      saveFile("data/site.json", next, "admin: update site", $("[data-site-status]"));
+    } catch (err) {
+      setStatus($("[data-site-status]"), "err", "error: " + (err.message || err));
+    }
   });
 
   $("[data-now-updated]").addEventListener("input", function (event) {
@@ -404,6 +444,12 @@
   });
 
   paintTokenStatus();
+
+  loadLocalJson("../data/site.json")
+    .then(applySite)
+    .catch(function (err) {
+      setStatus($("[data-site-status]"), "err", "error: " + (err.message || err));
+    });
 
   loadLocalJson("../data/now.json")
     .then(applyNow)

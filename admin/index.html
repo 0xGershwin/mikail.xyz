@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>admin — Mikail</title>
-    <meta name="description" content="Unlisted admin console for now.json and ships.json." />
+    <meta name="description" content="Unlisted admin console for site.json, now.json, and ships.json." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
     <link rel="stylesheet" href="../css/site.css" />
@@ -35,9 +35,24 @@
         </div>
       </section>
 
+      <section aria-labelledby="identity-title">
+        <div class="section-head">
+          <h2 class="section-title" id="identity-title">2. Identity</h2>
+          <p class="stamp mono">data/site.json</p>
+        </div>
+        <p class="admin-note">One-liner under the name on the home page.</p>
+        <div class="admin-line">
+          <textarea class="admin-textarea" data-site-thesis aria-label="Home page one-liner"></textarea>
+        </div>
+        <div class="admin-toolbar">
+          <button type="button" class="chip chip-accent" data-site-save>save identity</button>
+          <span class="admin-status mono" data-site-status></span>
+        </div>
+      </section>
+
       <section aria-labelledby="now-title">
         <div class="section-head">
-          <h2 class="section-title" id="now-title">2. Now</h2>
+          <h2 class="section-title" id="now-title">3. Now</h2>
           <p class="stamp mono">data/now.json</p>
         </div>
         <div class="admin-field">
@@ -54,7 +69,7 @@
 
       <section aria-labelledby="ships-title">
         <div class="section-head">
-          <h2 class="section-title" id="ships-title">3. Ships</h2>
+          <h2 class="section-title" id="ships-title">4. Ships</h2>
           <p class="stamp mono">data/ships.json</p>
         </div>
         <div class="admin-toolbar">
