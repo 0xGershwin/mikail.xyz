@@ -1,6 +1,6 @@
 # mikail.xyz
 
-Static personal site. Hosted on GitHub Pages (Actions deploy from `main`).
+Static personal site. Hosted on GitHub Pages from the default branch root.
 
 Live: https://0xgershwin.github.io/mikail.xyz/
 
