@@ -141,6 +141,19 @@
   background: #fff;
 }
 
+.admin-avatar {
+  display: block;
+  width: 3.4rem;
+  height: 3.4rem;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  background: #fff;
+}
+
+.admin-avatar[hidden] {
+  display: none;
+}
+
 .chip-accent {
   border-color: var(--accent);
   color: var(--accent);

@@ -9,8 +9,14 @@ Live: https://0xgershwin.github.io/mikail.xyz/
 The one-liner under the name on the home page is `data/site.json`:
 
 ```json
-{ "thesis": "one line under the name" }
+{
+  "thesis": "one line under the name",
+  "avatar": "assets/avatar.jpg",
+  "avatarUpdated": "2026-08-20T17:50:00.000Z"
+}
 ```
+
+`avatar` is optional — drop it and the header renders text only. Upload from `/admin/`, which center-crops to a 512px square JPEG, commits it to `assets/avatar.jpg`, and stamps `avatarUpdated` so the CDN copy is not reused.
 
 ## Edit now
 
