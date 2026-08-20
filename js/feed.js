@@ -16,6 +16,16 @@
     return document.createTextNode(value == null ? "" : String(value));
   }
 
+  // Resolve repo-root-relative links (e.g. demos/particles/) from both / and /ships/.
+  function resolveLink(link) {
+    if (!link || /^(https?:)?\/\//i.test(link) || link.charAt(0) === "/" || link.charAt(0) === "#") {
+      return link;
+    }
+    var dataDir = (src || "").replace(/[^/]*$/, "");
+    var siteRoot = dataDir.replace(/data\/?$/, "");
+    return siteRoot + link;
+  }
+
   function el(tag, className) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -36,11 +46,11 @@
         type.appendChild(text(entry.type));
 
         var title = el("a", "title");
-        title.href = entry.link || "#";
+        title.href = resolveLink(entry.link) || "#";
         title.appendChild(text(entry.title));
 
         var arrow = el("a", "arrow mono");
-        arrow.href = entry.link || "#";
+        arrow.href = resolveLink(entry.link) || "#";
         arrow.setAttribute("aria-label", "Open " + entry.title);
         arrow.appendChild(text("→"));
 
@@ -147,7 +157,7 @@
         var venture = el("span", "mono muted");
         venture.appendChild(text(entry.venture));
         var title = el("a", "feed-title");
-        title.href = entry.link || "#";
+        title.href = resolveLink(entry.link) || "#";
         title.appendChild(text(entry.title + " →"));
 
         line.appendChild(date);

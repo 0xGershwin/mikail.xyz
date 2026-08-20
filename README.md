@@ -20,7 +20,7 @@ All feed entries live in `data/ships.json`. Each object:
 ```
 
 - `type` is one of `LAUNCH`, `WIN`, `RELEASE`, `POST`, `DEMO`
-- `venture` is one of `agents`, `rwa`, `markets`
+- `venture` is one of `agents`, `rwa`, `markets`, `labs`
 - `date` is ISO `YYYY-MM-DD`
 
 Home shows the five newest entries. `/ships` shows the full reverse-chronological log and filters by venture and type.

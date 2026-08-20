@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perlin Noise Demo</title>
+    <style>
+      #panel-header:hover {
+        cursor: pointer;
+      }
+
+      @media only screen and (max-width: 520px) {
+        .desktop-only {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body style="display: flex; margin: 0">
+    <a href="../../" style="position:fixed;bottom:8px;left:8px;z-index:2;font-family:monospace;font-size:11px;color:#888;text-decoration:none;">← home</a>
+    <div id="panel-container" style="position: absolute; top: 20; left: 20">
+      <div
+        id="panel-header"
+        class=""
+        style="
+          height: 25px;
+          border-radius: 5px;
+          background-color: #2f3137;
+          position: relative;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-family: 'Roboto Mono', monospace;
+          font-size: 0.8em;
+          color: #bbbcc4;
+          z-index: 1;
+        "
+      >
+        DRAG
+      </div>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script src="./bundle.js" type="module"></script>
+  </body>
+</html>
