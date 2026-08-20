@@ -1,0 +1,114 @@
+[
+  {
+    "date": "2026-08-19",
+    "type": "LAUNCH",
+    "venture": "agents",
+    "title": "macmon: local process watcher for agent runs",
+    "link": "https://github.com/0xGershwin/macmon",
+    "blurb": "First cut of a macOS monitor that tails agent subprocesses and flags hung loops."
+  },
+  {
+    "date": "2026-08-12",
+    "type": "RELEASE",
+    "venture": "agents",
+    "title": "gershwin: tool-use traces persist across sessions",
+    "link": "https://github.com/0xGershwin/gershwin",
+    "blurb": "Session store keeps tool calls and diffs so a rerun can resume instead of starting cold."
+  },
+  {
+    "date": "2026-08-04",
+    "type": "DEMO",
+    "venture": "agents",
+    "title": "Agent loop that opens a PR, waits for CI, and retries once",
+    "link": "https://github.com/0xGershwin/gershwin",
+    "blurb": "End-to-end: plan, patch, push, watch checks, one retry on flake."
+  },
+  {
+    "date": "2026-07-28",
+    "type": "WIN",
+    "venture": "markets",
+    "title": "Maker bot held a two-week spread without inventory blowup",
+    "link": "https://github.com/MikailR",
+    "blurb": "Inventory caps and cancel-on-disconnect finally kept the book from eating the account."
+  },
+  {
+    "date": "2026-07-21",
+    "type": "POST",
+    "venture": "agents",
+    "title": "Notes on eval harnesses that do not lie",
+    "link": "https://github.com/0xGershwin/gershwin",
+    "blurb": "Golden traces beat vibe checks once the model starts gaming the rubric."
+  },
+  {
+    "date": "2026-07-14",
+    "type": "RELEASE",
+    "venture": "agents",
+    "title": "gershwin: first agent runtime with a typed tool registry",
+    "link": "https://github.com/0xGershwin/gershwin",
+    "blurb": "Sandboxed shell, typed tools, and a single JSON event log."
+  },
+  {
+    "date": "2026-07-06",
+    "type": "DEMO",
+    "venture": "rwa",
+    "title": "Tokenized invoice: mint, transfer, redeem on a testnet fork",
+    "link": "https://github.com/MikailR",
+    "blurb": "Full lifecycle on a fork. Transfer restrictions held; redeem burned the note."
+  },
+  {
+    "date": "2026-06-24",
+    "type": "WIN",
+    "venture": "rwa",
+    "title": "NAV feed matched the auditor spreadsheet for 30 days",
+    "link": "https://github.com/MikailR",
+    "blurb": "Off-chain NAV now signs on-chain. Drift stayed under two basis points."
+  },
+  {
+    "date": "2026-06-15",
+    "type": "RELEASE",
+    "venture": "markets",
+    "title": "Order router: one interface over two prediction venues",
+    "link": "https://github.com/MikailR",
+    "blurb": "Normalized tick size, fees, and fill reports so strategies stop forking per venue."
+  },
+  {
+    "date": "2026-06-02",
+    "type": "POST",
+    "venture": "markets",
+    "title": "Why CLOB plus AMM hybrids chew through naive bots",
+    "link": "https://github.com/MikailR",
+    "blurb": "Inventory risk when the AMM leg moves while a limit still sits."
+  },
+  {
+    "date": "2026-05-20",
+    "type": "LAUNCH",
+    "venture": "rwa",
+    "title": "Permissioned transfer hook for a tokenized fund share",
+    "link": "https://github.com/MikailR",
+    "blurb": "Allowlist plus lockup window. Transfers outside the window revert, on purpose."
+  },
+  {
+    "date": "2026-05-08",
+    "type": "DEMO",
+    "venture": "agents",
+    "title": "Claude Code in the browser: first remote session",
+    "link": "https://github.com/MikailR",
+    "blurb": "Thin web shell around a remote agent. Ugly, but it ran a repo from a phone."
+  },
+  {
+    "date": "2026-04-27",
+    "type": "RELEASE",
+    "venture": "rwa",
+    "title": "Cap table snapshotter: holders to CSV in one call",
+    "link": "https://github.com/MikailR",
+    "blurb": "Nightly job that dumps holders, lockups, and outstanding supply."
+  },
+  {
+    "date": "2026-04-19",
+    "type": "LAUNCH",
+    "venture": "markets",
+    "title": "First live fill on a sports prediction market",
+    "link": "https://github.com/MikailR",
+    "blurb": "Tiny size, real venue. The point was the pipeline, not the PnL."
+  }
+]
