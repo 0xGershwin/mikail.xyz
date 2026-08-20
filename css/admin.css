@@ -1,0 +1,147 @@
+.page-wide {
+  max-width: 68rem;
+}
+
+.admin-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.admin-note code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+  margin: 0.7rem 0 0.85rem;
+}
+
+.admin-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  margin: 0 0 0.55rem;
+}
+
+.admin-field label {
+  color: var(--muted);
+  min-width: 5.5rem;
+}
+
+.admin-grow {
+  flex: 1 1 16rem;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea {
+  appearance: none;
+  margin: 0;
+  padding: 0.22rem 0.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.admin-input:focus,
+.admin-select:focus,
+.admin-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.admin-textarea {
+  width: 100%;
+  min-height: 4.4rem;
+  resize: vertical;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+}
+
+.admin-line {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0 0 0.45rem;
+}
+
+.admin-line .admin-textarea {
+  flex: 1 1 auto;
+}
+
+.admin-status {
+  min-height: 1.2em;
+  color: var(--muted);
+}
+
+.admin-status.is-ok {
+  color: var(--accent);
+}
+
+.admin-status.is-err {
+  color: #8b1e1e;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.35rem;
+  border-top: 1px solid var(--rule);
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 58rem;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.18rem 0.22rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  text-align: left;
+}
+
+.admin-table th {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--muted);
+  padding-top: 0.45rem;
+}
+
+.admin-table col.col-date { width: 7.4rem; }
+.admin-table col.col-type { width: 6.4rem; }
+.admin-table col.col-venture { width: 5.6rem; }
+.admin-table col.col-title { width: 16rem; }
+.admin-table col.col-link { width: 14rem; }
+.admin-table col.col-del { width: 2.8rem; }
+
+.admin-table .admin-input,
+.admin-table .admin-select {
+  width: 100%;
+  padding: 0.16rem 0.28rem;
+  border-color: transparent;
+  background: transparent;
+}
+
+.admin-table .admin-input:focus,
+.admin-table .admin-select:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+
+.chip-accent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
