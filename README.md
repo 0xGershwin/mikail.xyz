@@ -1,5 +1,35 @@
 # mikail.xyz
 
+## Current: holding page (since 2026-09-24)
+
+The homepage is a deliberately simple under-construction page while the full site is rebuilt.
+
+| File | Role |
+|---|---|
+| `index.html` | Public page: photo, name, headline, GitHub link (inline CSS/JS) |
+| `site.json` | `{ "headline": "...", "avatarVersion": "..." }`, fetched with `cache: "no-store"` |
+| `avatar.jpg` | 512px profile photo, loaded as `avatar.jpg?v=<avatarVersion>` |
+| `admin/` | Unlisted editor (noindex): crop and upload photo, edit headline, waits until Pages is live |
+| `favicon.svg` | Favicon |
+
+**Editing:** open `/admin/` and use a fine-grained PAT with **Contents: Read and write** on
+`0xGershwin/mikail.xyz`. It's stored in `localStorage` under `mikail.admin.pat`, the same key the
+previous admin used. Each save is one commit via the Git Data API; identical saves commit nothing.
+
+**Still served, just unlinked:** `/demos/particles/`, `/demos/perlin/`, `/ships/`, `/writing/`, `data/*.json`,
+`assets/`, `css/`, `js/` (the old homepage's data and assets, kept for the full site).
+
+**Rollback** to the previous homepage and admin:
+
+```bash
+git checkout pre-holding-2026-09-24 -- index.html admin/index.html
+git rm avatar.jpg site.json favicon.svg && git commit -m "Restore previous homepage" && git push
+```
+
+---
+
+## Previous site (pre-holding): kept for reference
+
 Static personal site. Hosted on GitHub Pages from the default branch root.
 
 Live: https://0xgershwin.github.io/mikail.xyz/

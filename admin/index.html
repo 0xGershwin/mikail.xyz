@@ -1,129 +1,731 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>admin — Mikail</title>
-    <meta name="description" content="Unlisted admin console for site.json, now.json, and ships.json." />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
-    <link rel="stylesheet" href="../css/site.css" />
-    <link rel="stylesheet" href="../css/admin.css" />
-  </head>
-  <body>
-    <main class="page page-wide">
-      <p class="crumb mono"><a href="../">Mikail</a> / admin</p>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#fafafa" />
+  <title>admin — Mikail holding</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fafafa;
+      --ink: #111;
+      --muted: #666;
+      --line: #e5e5e5;
+      --face: #ececec;
+      --ok: #1f5fbf;
+      --err: #b42318;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body { padding: 32px 20px 64px; }
+    main { width: min(100%, 32rem); margin: 0 auto; }
+    .label {
+      margin: 0 0 0.5rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    h1 { margin: 0 0 0.5rem; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+    h2 { margin: 0 0 0.75rem; font-size: 0.95rem; font-weight: 600; }
+    .lead { margin: 0 0 1.75rem; color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+    section { margin: 0 0 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+    .note { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0 0 0.65rem; }
+    label.field {
+      display: grid;
+      gap: 0.25rem;
+      margin: 0 0 0.65rem;
+      font-size: 0.75rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    input[type="text"], input[type="password"], input[type="url"], input[type="file"] {
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 16px; /* no iOS zoom-on-focus */
+    }
+    input[type="file"] { padding: 0.45rem; font-size: 0.9rem; }
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 0.5rem 0.85rem;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) { border-color: #bbb; }
+    button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    button:disabled { opacity: 0.45; cursor: default; }
+    .status {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--muted);
+      min-height: 1.2em;
+    }
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--err); }
+    .status a { color: inherit; }
+    .current { display: flex; align-items: center; gap: 0.75rem; margin: 0 0 0.85rem; }
+    .circle {
+      width: 88px; height: 88px; border-radius: 50%; overflow: hidden;
+      background: var(--face); border: 1px solid var(--line); flex: 0 0 auto;
+      display: grid; place-items: center; color: var(--muted); font-weight: 600; font-size: 1.5rem;
+    }
+    .circle img, .circle canvas { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-      <section aria-labelledby="access-title">
-        <div class="section-head">
-          <h2 class="section-title" id="access-title">1. Access</h2>
-        </div>
-        <p class="admin-note">
-          Fine-grained GitHub PAT with <code>contents:write</code> on
-          <code>0xGershwin/mikail.xyz</code>. Stored in this browser’s
-          <code>localStorage</code> only — never written to the repo, never sent
-          anywhere except <code>api.github.com</code>. Publish commits to the
-          default branch via the Contents API. Unlisted; bookmark this URL.
-        </p>
-        <div class="admin-toolbar">
-          <label class="filter-label mono" for="pat">token</label>
-          <input id="pat" class="admin-input admin-grow" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" />
-          <button type="button" class="chip" data-store-token>store</button>
-          <button type="button" class="chip" data-clear-token>clear</button>
-          <span class="admin-status mono" data-token-status></span>
-        </div>
-      </section>
+    /* Cropper */
+    .cropper { margin: 0.25rem 0 0.85rem; }
+    .crop {
+      position: relative;
+      width: min(100%, 320px);
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #d9d9d9;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: grab;
+      outline: none;
+    }
+    .crop.dragging { cursor: grabbing; }
+    .crop:focus-visible { box-shadow: 0 0 0 2px var(--ink); }
+    .crop img {
+      position: absolute; left: 0; top: 0;
+      max-width: none; transform-origin: 0 0;
+      pointer-events: none; -webkit-user-drag: none;
+    }
+    .crop-mask {
+      position: absolute; inset: 0; border-radius: 50%;
+      box-shadow: 0 0 0 9999px rgba(250, 250, 250, 0.72);
+      outline: 1px solid rgba(0, 0, 0, 0.18);
+      pointer-events: none;
+    }
+    .zoom { display: flex; align-items: center; gap: 0.6rem; width: min(100%, 320px); margin: 0.6rem 0; }
+    .zoom input { flex: 1; }
+    .zoom span { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.75rem; color: var(--muted); }
+    .crop-side { display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
+    details summary { cursor: pointer; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+    a { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="label">unlisted</p>
+    <h1>Holding page admin</h1>
+    <p class="lead">
+      Edits the headline and profile photo on the
+      <a id="public-link" href="../">public page</a>. Each save is a single commit;
+      GitHub Pages usually publishes it in about a minute. This page tells you when it’s live.
+    </p>
 
-      <section aria-labelledby="identity-title">
-        <div class="section-head">
-          <h2 class="section-title" id="identity-title">2. Identity</h2>
-          <p class="stamp mono">data/site.json</p>
-        </div>
-        <p class="admin-note">One-liner under the name on the home page.</p>
-        <div class="admin-line">
-          <textarea class="admin-textarea" data-site-thesis aria-label="Home page one-liner"></textarea>
-        </div>
-        <div class="admin-toolbar">
-          <button type="button" class="chip chip-accent" data-site-save>save identity</button>
-          <span class="admin-status mono" data-site-status></span>
-        </div>
+    <section aria-labelledby="access-title">
+      <h2 id="access-title">1. Access</h2>
+      <p class="note">
+        Fine-grained GitHub token with <strong>Contents: Read and write</strong> on the target repo.
+        Stored in this browser’s <code>localStorage</code> only and sent only to <code>api.github.com</code>.
+      </p>
+      <label class="field" for="pat">token
+        <input id="pat" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" />
+      </label>
+      <div class="row">
+        <button type="button" id="store-token">Store token</button>
+        <button type="button" id="forget-token">Forget token</button>
+        <span class="status" id="token-status"></span>
+      </div>
+    </section>
 
-        <p class="admin-note">
-          Photo left of the name. Center-cropped to a square and re-encoded at
-          512px JPEG before it is committed to <code>assets/avatar.jpg</code>.
-        </p>
-        <div class="admin-toolbar">
-          <img class="admin-avatar" data-avatar-preview alt="Current photo" hidden />
-          <input
-            class="admin-input admin-grow"
-            type="file"
-            accept="image/*"
-            data-avatar-file
-            aria-label="Choose a photo"
-          />
-        </div>
-        <div class="admin-toolbar">
-          <button type="button" class="chip chip-accent" data-avatar-upload>upload photo</button>
-          <button type="button" class="chip" data-avatar-remove>remove photo</button>
-          <span class="admin-status mono" data-avatar-status></span>
-        </div>
-      </section>
+    <section aria-labelledby="headline-title">
+      <h2 id="headline-title">2. Headline</h2>
+      <p class="note">The line under your name. Plain text.</p>
+      <label class="field" for="headline">headline
+        <input id="headline" type="text" maxlength="160" spellcheck="true" />
+      </label>
+      <div class="row">
+        <button type="button" class="primary" id="save-headline" disabled>Save headline</button>
+        <span class="status" id="headline-status"></span>
+      </div>
+    </section>
 
-      <section aria-labelledby="now-title">
-        <div class="section-head">
-          <h2 class="section-title" id="now-title">3. Now</h2>
-          <p class="stamp mono">data/now.json</p>
-        </div>
-        <div class="admin-field">
-          <label class="filter-label mono" for="now-updated">updated</label>
-          <input id="now-updated" class="admin-input" type="date" data-now-updated />
-        </div>
-        <div data-now-lines></div>
-        <div class="admin-toolbar">
-          <button type="button" class="chip" data-now-add>add paragraph</button>
-          <button type="button" class="chip chip-accent" data-now-save>save now</button>
-          <span class="admin-status mono" data-now-status></span>
-        </div>
-      </section>
+    <section aria-labelledby="photo-title">
+      <h2 id="photo-title">3. Photo</h2>
+      <div class="current">
+        <div class="circle" id="current-circle">M</div>
+        <p class="note" style="margin:0">Current photo on the public page.</p>
+      </div>
+      <label class="field" for="file">choose a new image
+        <input id="file" type="file" accept="image/*" />
+      </label>
 
-      <section aria-labelledby="ships-title">
-        <div class="section-head">
-          <h2 class="section-title" id="ships-title">4. Ships</h2>
-          <p class="stamp mono">data/ships.json</p>
+      <div class="cropper" id="cropper" hidden>
+        <p class="note">Drag to reposition. Zoom with the slider, pinch, or scroll. The circle is what the page shows.</p>
+        <div class="crop-side">
+          <div class="crop" id="crop" tabindex="0" aria-label="Crop area. Arrow keys move, plus and minus zoom.">
+            <img id="crop-img" alt="" draggable="false" />
+            <div class="crop-mask"></div>
+          </div>
+          <div>
+            <div class="circle"><canvas id="mini" width="176" height="176"></canvas></div>
+            <p class="note" style="margin:0.35rem 0 0;text-align:center">on page</p>
+          </div>
         </div>
-        <div class="admin-toolbar">
-          <button type="button" class="chip" data-ship-add>add row</button>
-          <button type="button" class="chip chip-accent" data-ship-save>save ships</button>
-          <span class="admin-status mono" data-ship-status></span>
+        <div class="zoom">
+          <span>−</span>
+          <input id="zoom" type="range" min="1" max="5" step="0.01" value="1" aria-label="Zoom" />
+          <span>+</span>
+          <button type="button" id="reset-crop">Reset</button>
         </div>
-        <div class="admin-table-wrap">
-          <table class="admin-table">
-            <colgroup>
-              <col class="col-date" />
-              <col class="col-type" />
-              <col class="col-venture" />
-              <col class="col-title" />
-              <col class="col-link" />
-              <col class="col-blurb" />
-              <col class="col-del" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>date</th>
-                <th>type</th>
-                <th>venture</th>
-                <th>title</th>
-                <th>link</th>
-                <th>blurb</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody data-ship-rows></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-    <script src="../js/admin.js"></script>
-  </body>
+      </div>
+
+      <div class="row">
+        <button type="button" class="primary" id="upload" disabled>Upload photo</button>
+        <span class="status" id="upload-status"></span>
+      </div>
+    </section>
+
+    <section>
+      <details>
+        <summary>Target</summary>
+        <p class="note">Defaults come from <code>CONFIG</code> at the top of this page’s script. Edits here apply to this session only.</p>
+        <label class="field" for="t-owner">owner <input id="t-owner" type="text" spellcheck="false" /></label>
+        <label class="field" for="t-repo">repo <input id="t-repo" type="text" spellcheck="false" /></label>
+        <label class="field" for="t-branch">branch <input id="t-branch" type="text" spellcheck="false" /></label>
+        <label class="field" for="t-dir">folder in repo (holds index.html, site.json, avatar.jpg; empty = repo root)
+          <input id="t-dir" type="text" spellcheck="false" />
+        </label>
+        <label class="field" for="t-public">public page URL
+          <input id="t-public" type="url" spellcheck="false" />
+        </label>
+      </details>
+    </section>
+  </main>
+
+  <script>
+(function () {
+  "use strict";
+
+  // ---------------------------------------------------------------------------
+  // CONFIG: the one place to retarget. For production, change owner/repo/dir
+  // (e.g. owner "0xGershwin", repo "mikail.xyz", dir "") and publicUrl.
+  // publicUrl null = the folder one level above this admin page.
+  // ---------------------------------------------------------------------------
+  var CONFIG = {
+    owner: "0xGershwin",
+    repo: "mikail.xyz",
+    branch: "main",
+    dir: "",
+    publicUrl: null,
+    defaultHeadline: "Site under construction. Back soon.",
+    tokenKey: "mikail.admin.pat", // same key the previous /admin/ used, so a stored token carries over
+    avatarSize: 512,
+    jpegQuality: 0.88,
+    pollEveryMs: 5000,
+    pollForMs: 180000,
+  };
+
+  var API = "https://api.github.com";
+  var $ = function (id) { return document.getElementById(id); };
+
+  var state = {
+    busy: false,          // a commit is in flight; all save buttons locked
+    savedHeadline: "",    // what site.json holds as far as we know
+    avatarVersion: null,
+    cropDirty: false,     // crop changed since the last successful upload
+  };
+
+  // ---------- target + token ----------
+  function target() {
+    var dir = $("t-dir").value.trim().replace(/^\/+|\/+$/g, "");
+    var pub = $("t-public").value.trim();
+    if (pub && !/\/$/.test(pub)) pub += "/";
+    return {
+      owner: $("t-owner").value.trim(),
+      repo: $("t-repo").value.trim(),
+      branch: $("t-branch").value.trim() || "main",
+      sitePath: (dir ? dir + "/" : "") + "site.json",
+      avatarPath: (dir ? dir + "/" : "") + "avatar.jpg",
+      publicUrl: pub,
+    };
+  }
+
+  function fillTarget() {
+    $("t-owner").value = CONFIG.owner;
+    $("t-repo").value = CONFIG.repo;
+    $("t-branch").value = CONFIG.branch;
+    $("t-dir").value = CONFIG.dir;
+    $("t-public").value = CONFIG.publicUrl || new URL("../", location.href).href;
+    $("public-link").href = target().publicUrl;
+  }
+
+  function token() { return localStorage.getItem(CONFIG.tokenKey) || ""; }
+
+  // ---------- status (DOM-built, never innerHTML with remote text) ----------
+  function setStatus(node, kind, parts) {
+    node.className = "status" + (kind ? " " + kind : "");
+    node.textContent = "";
+    (Array.isArray(parts) ? parts : [parts]).forEach(function (p) {
+      if (p == null) return;
+      if (typeof p === "string") { node.appendChild(document.createTextNode(p)); return; }
+      var a = document.createElement("a");
+      a.href = p.href; a.textContent = p.text; a.target = "_blank"; a.rel = "noopener";
+      node.appendChild(a);
+    });
+  }
+
+  // ---------- GitHub API ----------
+  function gh(method, path, body) {
+    var t = target();
+    var headers = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+    if (token()) headers.Authorization = "Bearer " + token();
+    if (body) headers["Content-Type"] = "application/json";
+    return fetch(API + "/repos/" + encodeURIComponent(t.owner) + "/" + encodeURIComponent(t.repo) + path, {
+      method: method, headers: headers, body: body ? JSON.stringify(body) : undefined, cache: "no-store",
+    }).then(function (res) {
+      return res.text().then(function (text) {
+        var data = null;
+        try { data = text ? JSON.parse(text) : null; } catch (e) { data = null; }
+        if (!res.ok) {
+          var msg = (data && data.message) || res.statusText || "request failed";
+          if (res.status === 401) msg = "token rejected (401). It may be expired; paste a new one";
+          else if (res.status === 403 || (res.status === 404 && method !== "GET"))
+            msg = "no write access (" + res.status + "): token needs Contents: Read and write on " + t.owner + "/" + t.repo;
+          var err = new Error(msg); err.status = res.status; throw err;
+        }
+        return data;
+      });
+    });
+  }
+
+  function b64FromBytes(bytes) {
+    var bin = "";
+    for (var i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  function b64FromText(s) { return b64FromBytes(new TextEncoder().encode(s)); }
+  function textFromB64(b64) {
+    var bin = atob(String(b64 || "").replace(/\s/g, ""));
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  function readSiteAt(ref) {
+    var t = target();
+    return gh("GET", "/contents/" + t.sitePath.split("/").map(encodeURIComponent).join("/") + "?ref=" + encodeURIComponent(ref))
+      .then(function (meta) {
+        try { return JSON.parse(textFromB64(meta.content)); } catch (e) { return {}; }
+      })
+      .catch(function (err) { if (err.status === 404) return {}; throw err; });
+  }
+
+  function siteText(site) { return JSON.stringify(site, null, 2) + "\n"; }
+
+  /*
+   * One commit, however many files. Uses the Git Data API so a photo upload
+   * writes avatar.jpg AND site.json atomically (one commit, one Pages build).
+   * build(site, makeBlob) returns [{ path, sha }] tree entries.
+   * If the resulting tree equals the current one, nothing is committed
+   * (this is what stops empty "same content" commits).
+   */
+  function commitFiles(message, build, attempt) {
+    attempt = attempt || 1;
+    var t = target();
+    var head, baseTree, site;
+    return gh("GET", "/git/ref/heads/" + t.branch)
+      .then(function (ref) { head = ref.object.sha; return gh("GET", "/git/commits/" + head); })
+      .then(function (c) { baseTree = c.tree.sha; return readSiteAt(head); })
+      .then(function (s) {
+        site = s || {};
+        return build(site, function (b64) {
+          return gh("POST", "/git/blobs", { content: b64, encoding: "base64" }).then(function (b) { return b.sha; });
+        });
+      })
+      .then(function (entries) {
+        return gh("POST", "/git/trees", {
+          base_tree: baseTree,
+          tree: entries.map(function (e) { return { path: e.path, mode: "100644", type: "blob", sha: e.sha }; }),
+        });
+      })
+      .then(function (tree) {
+        if (tree.sha === baseTree) return { noop: true, site: site };
+        return gh("POST", "/git/commits", { message: message, tree: tree.sha, parents: [head] })
+          .then(function (commit) {
+            return gh("PATCH", "/git/refs/heads/" + t.branch, { sha: commit.sha, force: false })
+              .then(function () { return { noop: false, commit: commit, site: site }; })
+              .catch(function (err) {
+                // Branch moved underneath us: rebuild on the new head once or twice.
+                if (err.status === 422 && attempt < 3) return commitFiles(message, build, attempt + 1);
+                throw err;
+              });
+          });
+      });
+  }
+
+  // ---------- live polling ----------
+  function waitForLive(statusNode, expected, commit) {
+    var myPoll = (statusNode._poll = (statusNode._poll || 0) + 1);
+    var t = target();
+    var started = Date.now();
+    var commitLink = { href: commit.html_url, text: "commit " + commit.sha.slice(0, 7) };
+
+    return new Promise(function (resolve) {
+      function tick() {
+        if (myPoll !== statusNode._poll) return resolve(false); // superseded by a newer save
+        var secs = Math.round((Date.now() - started) / 1000);
+        setStatus(statusNode, "", ["Committed, waiting for GitHub Pages to publish… " + secs + "s · ", commitLink]);
+        fetch(t.publicUrl + "site.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .catch(function () { return null; })
+          .then(function (live) {
+            var match = live && Object.keys(expected).every(function (k) { return live[k] === expected[k]; });
+            if (!match) return false;
+            if (!expected.avatarVersion) return true;
+            return new Promise(function (ok) {
+              var img = new Image();
+              img.onload = function () { ok(true); };
+              img.onerror = function () { ok(false); };
+              img.src = t.publicUrl + "avatar.jpg?v=" + encodeURIComponent(expected.avatarVersion);
+            });
+          })
+          .then(function (isLive) {
+            if (myPoll !== statusNode._poll) return resolve(false);
+            if (isLive) {
+              setStatus(statusNode, "ok", ["Live · ", { href: t.publicUrl, text: "view page" }, " · ", commitLink]);
+              return resolve(true);
+            }
+            if (Date.now() - started >= CONFIG.pollForMs) {
+              setStatus(statusNode, "err", [
+                "Committed, but not live after 3 min. GitHub Pages is slow or the build failed. Check ",
+                { href: "https://github.com/" + t.owner + "/" + t.repo + "/actions", text: "Actions" },
+                " · ", commitLink,
+              ]);
+              return resolve(false);
+            }
+            setTimeout(tick, CONFIG.pollEveryMs);
+          });
+      }
+      tick();
+    });
+  }
+
+  // ---------- load current site.json ----------
+  function applySite(site) {
+    var h = site && typeof site.headline === "string" && site.headline.trim() ? site.headline : CONFIG.defaultHeadline;
+    state.savedHeadline = h;
+    state.avatarVersion = site && site.avatarVersion ? String(site.avatarVersion) : null;
+    $("headline").value = h;
+    paintCurrentPhoto();
+    refreshButtons();
+  }
+
+  function paintCurrentPhoto() {
+    var box = $("current-circle");
+    var t = target();
+    box.textContent = "M";
+    var img = new Image();
+    img.alt = "";
+    img.onload = function () { box.textContent = ""; box.appendChild(img); };
+    img.src = t.publicUrl + "avatar.jpg?v=" + encodeURIComponent(state.avatarVersion || Date.now());
+  }
+
+  function loadSite() {
+    var t = target();
+    var viaApi = token()
+      ? gh("GET", "/git/ref/heads/" + t.branch).then(function (ref) { return readSiteAt(ref.object.sha); })
+      : Promise.reject(new Error("no token"));
+    return viaApi
+      .catch(function () {
+        return fetch(t.publicUrl + "site.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : {}; });
+      })
+      .catch(function () { return {}; })
+      .then(applySite);
+  }
+
+  // ---------- buttons ----------
+  function refreshButtons() {
+    var hasToken = !!token();
+    var h = $("headline").value.trim();
+    $("save-headline").disabled = state.busy || !hasToken || !h || h === state.savedHeadline;
+    $("upload").disabled = state.busy || !hasToken || !crop.ready || !state.cropDirty;
+  }
+
+  function paintTokenStatus() {
+    var t = token();
+    $("pat").value = t;
+    if (!t) { setStatus($("token-status"), "", "no token stored"); refreshButtons(); return; }
+    setStatus($("token-status"), "", "stored · …" + t.slice(-4) + " · checking…");
+    gh("GET", "")
+      .then(function (repo) {
+        var canWrite = repo && repo.permissions && (repo.permissions.push || repo.permissions.admin);
+        setStatus($("token-status"), canWrite ? "ok" : "err",
+          "stored · …" + t.slice(-4) + (canWrite ? " · write access ok" : " · this token can’t write to " + repo.full_name));
+      })
+      .catch(function (err) { setStatus($("token-status"), "err", "stored · …" + t.slice(-4) + " · " + err.message); });
+    refreshButtons();
+  }
+
+  // ---------- headline save ----------
+  $("headline").addEventListener("input", refreshButtons);
+  $("headline").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !$("save-headline").disabled) $("save-headline").click();
+  });
+
+  $("save-headline").addEventListener("click", function () {
+    if (state.busy) return;
+    var next = $("headline").value.replace(/\s+/g, " ").trim();
+    if (!next) return;
+    var status = $("headline-status");
+    state.busy = true; refreshButtons();
+    setStatus(status, "", "Saving…");
+    commitFiles("holding: update headline", function (site, makeBlob) {
+      site.headline = next;
+      return makeBlob(b64FromText(siteText(site))).then(function (sha) {
+        return [{ path: target().sitePath, sha: sha }];
+      });
+    })
+      .then(function (res) {
+        state.busy = false;
+        state.savedHeadline = next;
+        if (res.site && res.site.avatarVersion) state.avatarVersion = String(res.site.avatarVersion);
+        refreshButtons();
+        if (res.noop) { setStatus(status, "ok", "No change. That headline is already saved."); return; }
+        return waitForLive(status, { headline: next }, res.commit);
+      })
+      .catch(function (err) {
+        state.busy = false; refreshButtons();
+        setStatus(status, "err", "Error: " + err.message);
+      });
+  });
+
+  // ---------- cropper ----------
+  var crop = {
+    ready: false, img: $("crop-img"), box: $("crop"), zoomEl: $("zoom"),
+    w: 0, h: 0, z: 1, cx: 0, cy: 0, pointers: new Map(), pinch: null,
+  };
+
+  function V() { return crop.box.clientWidth; }
+  function baseScale() { return Math.max(V() / crop.w, V() / crop.h); }
+
+  function renderCrop() {
+    if (!crop.ready) return;
+    var v = V(), s = baseScale() * crop.z;
+    var x = v / 2 - crop.cx * s, y = v / 2 - crop.cy * s;
+    x = Math.min(0, Math.max(v - crop.w * s, x));
+    y = Math.min(0, Math.max(v - crop.h * s, y));
+    crop.cx = (v / 2 - x) / s; crop.cy = (v / 2 - y) / s;
+    crop.x = x; crop.y = y; crop.s = s;
+    crop.img.style.transform = "translate(" + x + "px," + y + "px) scale(" + s + ")";
+    crop.zoomEl.value = String(crop.z);
+    scheduleMini();
+  }
+
+  function markDirty() { state.cropDirty = true; refreshButtons(); }
+
+  function zoomAt(z, px, py) {
+    z = Math.min(5, Math.max(1, z));
+    var s = baseScale() * crop.z, s2 = baseScale() * z;
+    var ix = (px - crop.x) / s, iy = (py - crop.y) / s;       // image point under (px,py)
+    crop.cx = ix + (V() / 2 - px) / s2; crop.cy = iy + (V() / 2 - py) / s2;
+    crop.z = z;
+    renderCrop(); markDirty();
+  }
+
+  function localPoint(e) {
+    var r = crop.box.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  crop.box.addEventListener("pointerdown", function (e) {
+    if (!crop.ready) return;
+    try { crop.box.setPointerCapture(e.pointerId); } catch (err) { /* synthetic/odd pointers */ }
+    crop.pointers.set(e.pointerId, localPoint(e));
+    crop.box.classList.add("dragging");
+    crop.pinch = null;
+  });
+  crop.box.addEventListener("pointermove", function (e) {
+    if (!crop.pointers.has(e.pointerId)) return;
+    var prev = crop.pointers.get(e.pointerId), p = localPoint(e);
+    crop.pointers.set(e.pointerId, p);
+    if (crop.pointers.size === 1) {
+      crop.cx -= (p.x - prev.x) / crop.s; crop.cy -= (p.y - prev.y) / crop.s;
+      renderCrop(); markDirty();
+    } else if (crop.pointers.size === 2) {
+      var pts = Array.from(crop.pointers.values());
+      var dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      var mid = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+      if (crop.pinch && crop.pinch.dist > 0) {
+        crop.cx -= (mid.x - crop.pinch.mid.x) / crop.s; crop.cy -= (mid.y - crop.pinch.mid.y) / crop.s;
+        renderCrop();
+        zoomAt(crop.z * (dist / crop.pinch.dist), mid.x, mid.y);
+      }
+      crop.pinch = { dist: dist, mid: mid };
+    }
+  });
+  function endPointer(e) {
+    crop.pointers.delete(e.pointerId);
+    crop.pinch = null;
+    if (!crop.pointers.size) crop.box.classList.remove("dragging");
+  }
+  crop.box.addEventListener("pointerup", endPointer);
+  crop.box.addEventListener("pointercancel", endPointer);
+  crop.box.addEventListener("wheel", function (e) {
+    if (!crop.ready) return;
+    e.preventDefault();
+    var p = localPoint(e);
+    zoomAt(crop.z * Math.exp(-e.deltaY * 0.0015), p.x, p.y);
+  }, { passive: false });
+  crop.box.addEventListener("keydown", function (e) {
+    if (!crop.ready) return;
+    var step = 12 / crop.s, handled = true;
+    if (e.key === "ArrowLeft") crop.cx -= step;
+    else if (e.key === "ArrowRight") crop.cx += step;
+    else if (e.key === "ArrowUp") crop.cy -= step;
+    else if (e.key === "ArrowDown") crop.cy += step;
+    else if (e.key === "+" || e.key === "=") { zoomAt(crop.z * 1.1, V() / 2, V() / 2); e.preventDefault(); return; }
+    else if (e.key === "-") { zoomAt(crop.z / 1.1, V() / 2, V() / 2); e.preventDefault(); return; }
+    else handled = false;
+    if (handled) { e.preventDefault(); renderCrop(); markDirty(); }
+  });
+  crop.zoomEl.addEventListener("input", function () { zoomAt(parseFloat(crop.zoomEl.value), V() / 2, V() / 2); });
+  $("reset-crop").addEventListener("click", function () { resetCrop(); markDirty(); });
+  window.addEventListener("resize", renderCrop);
+
+  function resetCrop() { crop.z = 1; crop.cx = crop.w / 2; crop.cy = crop.h / 2; renderCrop(); }
+
+  // Draws the chosen square region into a canvas of the given size.
+  function drawCrop(canvas, size) {
+    var ctx = canvas.getContext("2d");
+    canvas.width = size; canvas.height = size;
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, size, size); // JPEG has no alpha
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+    var side = V() / crop.s;
+    ctx.drawImage(crop.img, -crop.x / crop.s, -crop.y / crop.s, side, side, 0, 0, size, size);
+  }
+
+  var miniQueued = false;
+  function scheduleMini() {
+    if (miniQueued) return;
+    miniQueued = true;
+    requestAnimationFrame(function () { miniQueued = false; drawCrop($("mini"), 176); });
+  }
+
+  function exportJpeg() {
+    var c = document.createElement("canvas");
+    drawCrop(c, CONFIG.avatarSize);
+    return new Promise(function (resolve, reject) {
+      c.toBlob(function (b) { b ? resolve(b) : reject(new Error("could not encode image")); }, "image/jpeg", CONFIG.jpegQuality);
+    });
+  }
+
+  $("file").addEventListener("change", function () {
+    var file = $("file").files && $("file").files[0];
+    setStatus($("upload-status"), "", "");
+    if (!file) return;
+    var url = URL.createObjectURL(file);
+    crop.ready = false; refreshButtons();
+    crop.img.onload = function () {
+      crop.w = crop.img.naturalWidth; crop.h = crop.img.naturalHeight;
+      if (!crop.w || !crop.h) { setStatus($("upload-status"), "err", "That image has no size."); return; }
+      crop.img.style.width = crop.w + "px"; crop.img.style.height = crop.h + "px";
+      $("cropper").hidden = false;
+      crop.ready = true;
+      resetCrop();
+      state.cropDirty = true; refreshButtons();
+    };
+    crop.img.onerror = function () {
+      URL.revokeObjectURL(url);
+      $("cropper").hidden = true;
+      setStatus($("upload-status"), "err", "Couldn’t read that file as an image. Try a JPEG or PNG.");
+    };
+    crop.img.src = url;
+  });
+
+  // ---------- photo upload ----------
+  $("upload").addEventListener("click", function () {
+    if (state.busy || !crop.ready) return;
+    var status = $("upload-status");
+    state.busy = true; refreshButtons();
+    setStatus(status, "", "Preparing photo…");
+    var version = null;
+    exportJpeg()
+      .then(function (blob) { return blob.arrayBuffer(); })
+      .then(function (buf) {
+        var avatarB64 = b64FromBytes(new Uint8Array(buf));
+        setStatus(status, "", "Uploading " + Math.round(buf.byteLength / 1024) + " KB…");
+        return commitFiles("holding: update avatar", function (site, makeBlob) {
+          return makeBlob(avatarB64).then(function (avatarSha) {
+            // Content-addressed version: same photo gives the same version, so no bogus change.
+            version = avatarSha.slice(0, 12);
+            if (typeof site.headline !== "string") site.headline = state.savedHeadline || CONFIG.defaultHeadline;
+            site.avatarVersion = version;
+            return makeBlob(b64FromText(siteText(site))).then(function (siteSha) {
+              return [{ path: target().avatarPath, sha: avatarSha }, { path: target().sitePath, sha: siteSha }];
+            });
+          });
+        });
+      })
+      .then(function (res) {
+        state.busy = false;
+        state.cropDirty = false; // must change the crop (or pick a new file) to upload again
+        state.avatarVersion = version;
+        refreshButtons();
+        if (res.noop) { setStatus(status, "ok", "No change. This exact photo is already uploaded."); return; }
+        return waitForLive(status, { avatarVersion: version }, res.commit).then(function (live) {
+          if (live) paintCurrentPhoto();
+        });
+      })
+      .catch(function (err) {
+        state.busy = false; refreshButtons();
+        setStatus(status, "err", "Error: " + err.message);
+      });
+  });
+
+  // ---------- token ----------
+  $("store-token").addEventListener("click", function () {
+    var v = $("pat").value.trim();
+    if (!v) { setStatus($("token-status"), "err", "paste a token first"); return; }
+    localStorage.setItem(CONFIG.tokenKey, v);
+    paintTokenStatus();
+    loadSite();
+  });
+  $("forget-token").addEventListener("click", function () {
+    localStorage.removeItem(CONFIG.tokenKey);
+    paintTokenStatus();
+  });
+  ["t-owner", "t-repo", "t-branch", "t-dir", "t-public"].forEach(function (id) {
+    $(id).addEventListener("change", function () { $("public-link").href = target().publicUrl; paintTokenStatus(); loadSite(); });
+  });
+
+  fillTarget();
+  paintTokenStatus();
+  loadSite();
+})();
+  </script>
+</body>
 </html>

@@ -1,49 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mikail</title>
-    <meta name="description" content="Mikail — a multiplexer into everything he ships." />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
-    <link rel="stylesheet" href="css/site.css" />
-  </head>
-  <body>
-    <main class="page">
-      <header class="site" data-site data-src="data/site.json">
-        <div class="site-head">
-          <img class="avatar" data-site-avatar alt="Mikail" width="74" height="74" hidden />
-          <div class="site-headings">
-            <h1 class="name">Mikail</h1>
-            <p class="thesis" data-site-thesis></p>
-            <ul class="identity-links mono">
-              <li><a href="ships/">ships</a></li>
-              <li><a href="writing/">writing</a></li>
-              <li><a href="https://github.com/MikailR">github</a></li>
-              <li><a href="mailto:hello@mikail.xyz">email</a></li>
-            </ul>
-          </div>
-        </div>
-      </header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fafafa" />
+  <meta name="description" content="Mikail — site under construction." />
+  <title>Mikail</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fafafa;
+      --ink: #111;
+      --muted: #666;
+      --line: #e5e5e5;
+      --face: #ececec;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+    }
+    main {
+      width: min(100%, 28rem);
+      text-align: center;
+    }
+    .label {
+      margin: 0 0 1.25rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .face {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 1.1rem;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--face);
+      border: 1px solid var(--line);
+    }
+    .face img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .face-fallback {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: -0.02em;
+    }
+    [hidden] { display: none !important; }
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.75rem, 5vw, 2.25rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .note {
+      margin: 0 0 1.75rem;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid var(--line);
+      margin: 0 auto 1.75rem;
+      width: 3rem;
+    }
+    a {
+      color: var(--ink);
+      font-size: 1rem;
+      font-weight: 500;
+      text-underline-offset: 0.2em;
+    }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="label">mikail.xyz</p>
+    <div class="face" aria-hidden="true">
+      <img id="avatar" alt="" width="88" height="88" hidden />
+      <div id="fallback" class="face-fallback" hidden>M</div>
+    </div>
+    <h1>Mikail</h1>
+    <!-- Hardcoded fallback; replaced from site.json when it loads. -->
+    <p class="note" id="headline">Site under construction. Back soon.</p>
+    <hr />
+    <a href="https://github.com/MikailR">GitHub</a>
+  </main>
+  <script>
+    (function () {
+      var img = document.getElementById("avatar");
+      var fallback = document.getElementById("fallback");
+      var headline = document.getElementById("headline");
 
-      <section aria-labelledby="now-title" data-now data-src="data/now.json">
-        <div class="section-head">
-          <h2 class="section-title" id="now-title">1. Now</h2>
-          <p class="stamp mono" data-now-stamp></p>
-        </div>
-        <div data-now-lines></div>
-      </section>
+      function showFallback() {
+        img.removeAttribute("src");
+        img.hidden = true;
+        fallback.hidden = false;
+      }
 
-      <section aria-labelledby="recent-title">
-        <div class="section-head">
-          <h2 class="section-title" id="recent-title">2. Recent</h2>
-        </div>
-        <ol class="recent" data-feed data-src="data/ships.json" data-mode="recent"></ol>
-      </section>
-    </main>
-    <script src="js/site.js"></script>
-    <script src="js/now.js"></script>
-    <script src="js/feed.js"></script>
-  </body>
+      function loadAvatar(version) {
+        img.onload = function () {
+          fallback.hidden = true;
+          img.hidden = false;
+        };
+        img.onerror = showFallback;
+        // Versioned URL: a new upload changes avatarVersion, so the browser
+        // can never serve a stale copy from its own cache.
+        img.src = "avatar.jpg?v=" + encodeURIComponent(version);
+      }
+
+      fetch("site.json?t=" + Date.now(), { cache: "no-store" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("site.json " + res.status);
+          return res.json();
+        })
+        .then(function (site) {
+          if (site && typeof site.headline === "string" && site.headline.trim()) {
+            headline.textContent = site.headline; // plain text only
+          }
+          if (site && site.avatarVersion) loadAvatar(String(site.avatarVersion));
+          else showFallback();
+        })
+        .catch(function () {
+          // No site.json: keep the default headline, still try the photo.
+          loadAvatar(String(Date.now()));
+        });
+    })();
+  </script>
+</body>
 </html>
